@@ -29,16 +29,21 @@ def main():
 
     qualified_teams = [  ]
 
+    # Build list of teams that qualified
     for competition in competition_awards:
         for award in competition['awards']:
             if award['team']:
                 qualified_teams.append(award['team'])
 
+    # Remove duplicates
     unique_qualified_teams = set(qualified_teams)
 
+    # Get full list of teams from VexDB
     us_teams = get_us_teams()
+    # Get just the team numbers in uppercase
     us_team_numbers = set([ team['number'].upper() for team in us_teams ])
 
+    # Get list of qualified US teams by cross-referencing with US teams from VexDB
     qualified_us_teams = [ team for team in qualified_teams if team in us_team_numbers ]
     unique_qualified_us_teams = set(qualified_us_teams)
 
@@ -48,6 +53,7 @@ def main():
     print(unique_qualified_us_teams)
     print(f"As a result, there are {skills_spots} qualification spots available for skills")
 
+    # Build list of US teams that have not qualified
     skills_us_teams_quals = [ ]
     for entry in skills:
         country = entry['team']['country']
@@ -63,6 +69,7 @@ def main():
 
 
 #TODO: If team gets 2 qualification spots at same tournament, it goes to skills from that tournament
+
 
 def get_us_teams():
     params = {
@@ -83,6 +90,7 @@ def get_world_qualifier_awards():
     is_last_page = False
     links = []
 
+    # Iterate through every page of events
     while not is_last_page:
         params = {
             "grade_level": 4,
@@ -94,6 +102,7 @@ def get_world_qualifier_awards():
         resp = get(EVENTS_URL, params=params)
         root = lxml.html.fromstring(resp.content)
 
+        # Keep going until next page button is disabled (i.e. last page)
         links.extend(
             root.xpath("//div[contains(@class,'results')]/div/p/strong/a/@href"))
         next_btn = root.xpath("//ul[@class='pagination']/li[4]")[0]
@@ -123,10 +132,12 @@ def get_world_qualifier_awards():
 
         qualifying_awards = []
         for div in table_divs:
+            # Table with list of awards is called 'Awards'
             table_name = div.xpath("./div[@class='panel-heading']/b/text()")[0]
 
             if table_name == "Awards":
                 award_rows = div.xpath("./div/table//tr")
+                # Get list of awards that qualify for Worlds
                 for award_row in award_rows[1:]:
                     award_columns = list(award_row)
                     award_name = award_columns[0].text
@@ -134,8 +145,11 @@ def get_world_qualifier_awards():
                     if 'World Championship' in award_qualifies_for:
                         qualifying_awards.append(award_name)
 
+        # If 'Awards' is first table, it is assumed that the results have not
+        # been published
         first_table_name = table_divs[0].xpath("./div[@class='panel-heading']/b/text()")[0]
         if first_table_name != 'Awards':
+            # Get team numbers for qualifying awards from other tables
             for awarded_table in table_divs[:-1]:
                 award_rows = awarded_table.xpath("./div/table//tr")
                 for award_row in award_rows[1:]:
@@ -150,6 +164,7 @@ def get_world_qualifier_awards():
                         }
                         competition['awards'].append(award_dict)
         else:
+            # If awards have not been published, no team has received any awards
             for qualifying_award in qualifying_awards:
                 award_dict = {
                     'award_name': qualifying_award,
@@ -162,10 +177,6 @@ def get_world_qualifier_awards():
 
 
     return all_awards
-
-
-
-
 
 
 
