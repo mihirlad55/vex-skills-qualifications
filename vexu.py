@@ -49,10 +49,6 @@ def main():
 
     skills_spots = len(qualified_us_teams) - len(unique_qualified_us_teams)
 
-    print("The following teams have qualified through events: ")
-    print(unique_qualified_us_teams)
-    print(f"As a result, there are {skills_spots} qualification spots available for skills")
-
     # Build list of US teams that have not qualified
     skills_us_teams_quals = [ ]
     for entry in skills:
@@ -64,6 +60,10 @@ def main():
 
             skills_us_teams_quals.append(team_number)
 
+
+    print("The following teams have qualified through events: ")
+    print(unique_qualified_us_teams)
+    print(f"As a result, there are {skills_spots} qualification spots available for skills")
     print("As of right now, the following teams from the US may qualify through skills")
     print(skills_us_teams_quals)
 
