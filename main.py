@@ -66,6 +66,7 @@ def get_skills_qualifications(country, program, vexdb_program, grade_level):
 
     print(f"The following {len(unique_qualified_teams)} teams have qualified through events: ")
     print(unique_qualified_teams)
+    print(f"There were {skills_spots} extra qualifications that went to already qualified teams")
     print(f"As a result, there are {skills_spots} qualification spots available for skills")
     print(f"As of right now, the following teams from {country} may qualify through skills")
     print(skills_teams_quals)
