@@ -6,7 +6,7 @@ import json
 
 TEAMS_API_URL = "https://api.vexdb.io/v1/get_teams"
 
-class VexDb:
+class VexDB:
     @classmethod
     def get_teams(self, program, country):
         params = {

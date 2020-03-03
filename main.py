@@ -10,7 +10,7 @@ from re import search
 import pdb
 
 from RobotEvents import RobotEvents
-from VexDb import VexDb
+from VexDB import VexDB
 
 
 AWARDS_API_URL = "https://api.vexdb.io/v1/get_awards"
@@ -20,7 +20,7 @@ EVENT_DETAILS_URL = "https://www.robotevents.com/robot-competitions/college-comp
 
 
 def main():
-    get_skills_qualifications('Canada', 'VEX U', 'VEXU', 'College')
+    get_skills_qualifications('United States', 'VEX U', 'VEXU', 'College')
 
 
 
@@ -42,7 +42,7 @@ def get_skills_qualifications(country, program, vexdb_program, grade_level):
     unique_qualified_teams = set(qualified_teams)
 
     # Get full list of teams from VexDB
-    teams = VexDb.get_teams(vexdb_program, country)
+    teams = VexDB.get_teams(vexdb_program, country)
     # Get just the team numbers in uppercase
     team_numbers = set([ team['number'].upper() for team in teams ])
 
